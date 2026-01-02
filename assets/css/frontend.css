@@ -1,0 +1,181 @@
+/* CSS Frontend - WP Active Story */
+:root {
+  --wpas-primary-color: #0095f6;
+  --wpas-secondary-color: #8e8e8e;
+  --wpas-bg-color: #000;
+  --wpas-text-color: #fff;
+  --wpas-progress-height: 3px;
+  --wpas-story-width: 360px;
+  --wpas-story-height: 640px;
+}
+
+.wpas-story-container {
+  position: relative;
+  width: var(--wpas-story-width);
+  height: var(--wpas-story-height);
+  margin: 0 auto;
+  background: var(--wpas-bg-color);
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.wpas-story-header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  padding: 10px;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.5), transparent);
+}
+
+.wpas-progress-container {
+  display: flex;
+  gap: 5px;
+  margin-bottom: 10px;
+}
+
+.wpas-progress-bar {
+  flex: 1;
+  height: var(--wpas-progress-height);
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.wpas-progress-fill {
+  height: 100%;
+  background: var(--wpas-text-color);
+  width: 0%;
+  transition: width 0.1s linear;
+}
+
+.wpas-story-close {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  color: var(--wpas-text-color);
+  background: rgba(0, 0, 0, 0.5);
+  border: none;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.wpas-story-content {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.wpas-story-item {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+.wpas-story-item.active {
+  opacity: 1;
+}
+
+.wpas-story-item img,
+.wpas-story-item video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.wpas-story-caption {
+  position: absolute;
+  bottom: 80px;
+  left: 0;
+  right: 0;
+  padding: 20px;
+  color: var(--wpas-text-color);
+  text-align: center;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+}
+
+.wpas-story-controls {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+}
+
+.wpas-control-btn {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  color: var(--wpas-text-color);
+  font-size: 24px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.3s ease;
+}
+
+.wpas-control-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.wpas-like-btn {
+  background: transparent;
+  border: none;
+  color: var(--wpas-text-color);
+  font-size: 24px;
+  cursor: pointer;
+  position: absolute;
+  right: 20px;
+  bottom: 20px;
+}
+
+.wpas-like-btn.liked {
+  color: #ed4956;
+}
+
+.wpas-navigation-area {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 50%;
+  z-index: 5;
+}
+
+.wpas-prev-area {
+  left: 0;
+}
+
+.wpas-next-area {
+  right: 0;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .wpas-story-container {
+    width: 100vw;
+    height: 100vh;
+    border-radius: 0;
+  }
+}
+
+/*# sourceMappingURL=frontend.css.map */

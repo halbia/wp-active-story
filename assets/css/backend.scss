@@ -1,0 +1,836 @@
+// assets/css/admin-metabox.scss
+
+// Variables (همان)
+$primary-color: #007cba;
+$success-color: #28a745;
+$danger-color:  #dc3545;
+$warning-color: #ffc107;
+$info-color:    #17a2b8;
+$light-color:   #f0f0f0;
+$dark-color:    #343a40;
+$border-color:  #dee2e6;
+$text-color:    #495057;
+$text-muted:    #6c757d;
+$white:         #ffffff;
+$shadow:        0 2px 4px rgba(0, 0, 0, 0.1);
+$radius:        5px;
+$transition:    all 0.3s ease;
+
+// Mixins (همان)
+@mixin flex-center {
+  display:         flex;
+  align-items:     center;
+  justify-content: center;
+}
+
+@mixin flex-between {
+  display:         flex;
+  align-items:     center;
+  justify-content: space-between;
+}
+
+@mixin flex-column {
+  display:        flex;
+  flex-direction: column;
+}
+
+@mixin media-hover {
+  @media (hover: hover) {
+	&:hover {
+	  @content;
+	}
+  }
+}
+
+@mixin placeholder {
+  &::placeholder {
+	@content;
+  }
+
+  &::-webkit-input-placeholder {
+	@content;
+  }
+
+  &::-moz-placeholder {
+	@content;
+  }
+
+  &:-ms-input-placeholder {
+	@content;
+  }
+
+  &:-moz-placeholder {
+	@content;
+  }
+}
+
+// Reset and Base
+.wpas-metabox-container, #wpas_story_items {
+  padding: 15px 0;
+
+  * {
+	box-sizing: border-box;
+  }
+}
+
+// Field Groups
+.wpas-field-group {
+  margin-bottom: 20px;
+
+  label {
+	display:       block;
+	margin-bottom: 5px;
+	font-weight:   600;
+	color:         $text-color;
+  }
+
+  .description {
+	margin-top:  5px;
+	color:       $text-muted;
+	font-style:  italic;
+	font-size:   13px;
+	line-height: 1.4;
+  }
+
+  // Input styles
+  input[type="text"],
+  input[type="number"],
+  input[type="url"],
+  input[type="email"],
+  select,
+  textarea {
+	width:            100%;
+	padding:          8px 12px;
+	border:           1px solid $border-color;
+	border-radius:    4px;
+	font-size:        14px;
+	line-height:      1.5;
+	color:            $text-color;
+	background-color: $white;
+	transition:       $transition;
+
+	@include placeholder {
+	  color:   $text-muted;
+	  opacity: 0.7;
+	}
+
+	&:focus {
+	  outline:      none;
+	  border-color: $primary-color;
+	  box-shadow:   0 0 0 3px rgba($primary-color, 0.1);
+	}
+
+	&:disabled {
+	  background-color: $light-color;
+	  cursor:           not-allowed;
+	  opacity:          0.6;
+	}
+  }
+
+  select {
+	cursor:              pointer;
+	appearance:          none;
+	background-image:    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%236c757d' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+	background-repeat:   no-repeat;
+	background-position: left 12px center;
+	background-size:     12px;
+	padding-left:        35px;
+  }
+}
+
+// Story Items Container
+.wpas-story-items-container {
+  margin-bottom: 20px;
+}
+
+// Story Item
+.wpas-story-item {
+  background:    $white;
+  border:        1px solid $border-color;
+  border-radius: $radius;
+  margin-bottom: 15px;
+  padding:       15px;
+  position:      relative;
+
+  &:hover {
+	border-color: darken($border-color, 10%);
+	box-shadow:   $shadow;
+  }
+
+  &.ui-sortable-helper {
+	box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+	transform:  rotate(1deg);
+	z-index:    1000;
+  }
+
+  &.collapsed {
+	.wpas-item-content {
+	  display: none;
+	}
+
+	.wpas-toggle-collapse svg {
+	  transform: rotate(-180deg);
+	}
+  }
+}
+
+// Item Header
+.wpas-item-header {
+  @include flex-between;
+  align-items: center;
+  gap:         10px;
+
+  @media screen and (max-width: 782px) {
+	flex-direction: column;
+	align-items:    flex-start;
+	gap:            10px;
+  }
+}
+
+.wpas-item-controls {
+  @include flex-center;
+  gap:       10px;
+  flex-grow: 1;
+
+  @media screen and (max-width: 782px) {
+	width: 100%;
+  }
+}
+
+.wpas-drag-handle {
+  display:         flex;
+  align-items:     center;
+  justify-content: center;
+  height:          40px;
+  width:           40px;
+  border-radius:   4px;
+  cursor:          move;
+  color:           $text-muted;
+  transition:      $transition;
+
+  svg {
+	width:  24px;
+	height: 25px;
+  }
+
+  &:hover {
+	background: #f0f0f0;
+	color:      $text-color;
+  }
+
+  @media screen and (max-width: 782px) {
+	display: none;
+  }
+}
+
+.wpas-item-title-input {
+  flex-grow:     1;
+  height:        40px;
+  padding:       8px 12px;
+  border:        1px solid $border-color;
+  border-radius: 4px;
+  font-size:     14px;
+  transition:    $transition;
+
+  @include placeholder {
+	color: $text-muted;
+  }
+
+  &:focus {
+	outline:      none;
+	border-color: $primary-color;
+	box-shadow:   0 0 0 2px rgba($primary-color, 0.1);
+  }
+}
+
+.wpas-item-actions {
+  display: flex;
+  gap:     8px;
+
+  @media screen and (max-width: 782px) {
+	width:           100%;
+	justify-content: flex-end;
+  }
+
+  .button {
+	display:         flex;
+	align-items:     center;
+	justify-content: center;
+	height:          40px;
+	width:           40px;
+	transition:      $transition;
+	border:          none;
+	flex-shrink:     0;
+
+	svg {
+	  width:  24px;
+	  height: 24px;
+	}
+
+	&.wpas-toggle-collapse {
+	  background-color: $light-color;
+	  color:            $text-muted;
+
+	  &:hover {
+		background-color: darken($light-color, 5%);
+	  }
+	}
+
+	&:nth-child(2) {
+	  background-color: $info-color;
+	  color:            $white;
+
+	  &:hover {
+		background-color: darken($info-color, 10%);
+	  }
+	}
+
+	&:last-child {
+	  background-color: $danger-color;
+	  color:            $white;
+
+	  &:hover {
+		background-color: darken($danger-color, 10%);
+	  }
+	}
+  }
+}
+
+// Item Content
+.wpas-item-content {
+  @include flex-column;
+  gap:         15px;
+  margin-top:  15px;
+  padding-top: 15px;
+  border-top:  1px solid $border-color;
+}
+
+// Media Selector
+.wpas-media-selector {
+  background:    $light-color;
+  padding:       20px;
+  border-radius: $radius;
+  border:        1px solid $border-color;
+}
+
+.wpas-media-upload {
+  margin: 20px 0;
+}
+
+.wpas-media-preview {
+  position:      relative;
+  margin-bottom: 15px;
+  border:        2px dashed $border-color;
+  border-radius: $radius;
+  min-height:    250px;
+  @include flex-center;
+  overflow:      hidden;
+  background:    $white;
+  transition:    $transition;
+  cursor:        pointer;
+
+  &:hover {
+	border-color: $primary-color;
+  }
+
+  &.has-media {
+	border-style: solid;
+	border-color: $success-color;
+	background:   transparent;
+
+	.wpas-media-placeholder {
+	  display: none;
+	}
+  }
+
+  img,
+  video {
+	max-width:  100%;
+	max-height: 300px;
+	display:    block;
+	object-fit: contain;
+  }
+}
+
+.wpas-media-placeholder {
+  text-align: center;
+  color:      $text-muted;
+
+  svg {
+	width:  50px;
+	height: 50px;
+  }
+
+  .wpas-media-text {
+	display:     block;
+	font-size:   14px;
+	font-weight: 500;
+  }
+}
+
+.button.wpas-select-media {
+  display: none;
+}
+
+// Type and Duration in same row
+.wpas-type-duration-row {
+  display:     flex;
+  gap:         20px;
+  align-items: flex-start;
+
+  @media screen and (max-width: 782px) {
+	flex-direction: column;
+	gap:            15px;
+  }
+
+  .wpas-field-group {
+	flex:          1;
+	margin-bottom: 0;
+
+	@media screen and (max-width: 782px) {
+	  width: 100%;
+	}
+  }
+}
+
+// Duration Field (تغییر به ثانیه)
+.wpas-duration-field {
+  @include flex-center;
+  gap:       10px;
+  flex-wrap: wrap;
+}
+
+.wpas-duration-input {
+  width:         120px;
+  padding:       8px;
+  border:        1px solid $border-color;
+  border-radius: 4px;
+  text-align:    center;
+  font-size:     14px;
+
+  &:focus {
+	outline:      none;
+	border-color: $primary-color;
+  }
+}
+
+.wpas-duration-display {
+  color:      $text-muted;
+  font-size:  13px;
+  font-style: italic;
+  margin-top: 5px;
+}
+
+// Related Posts (با قابلیت Ajax)
+.wpas-related-posts-container {
+  position: relative;
+}
+
+.wpas-related-posts-search {
+  margin-bottom: 15px;
+}
+
+.wpas-search-input {
+  width:         100%;
+  padding:       8px 12px;
+  border:        1px solid $border-color;
+  border-radius: 4px;
+  font-size:     14px;
+
+  &:focus {
+	outline:      none;
+	border-color: $primary-color;
+	box-shadow:   0 0 0 3px rgba($primary-color, 0.1);
+  }
+}
+
+.wpas-search-results {
+  max-height:    200px;
+  overflow-y:    auto;
+  border:        1px solid $border-color;
+  border-radius: $radius;
+  background:    $white;
+  margin-bottom: 15px;
+  display:       none;
+
+  &.has-results {
+	display: block;
+  }
+}
+
+.wpas-search-result-item {
+  padding:       10px 15px;
+  border-bottom: 1px solid $border-color;
+  cursor:        pointer;
+  transition:    $transition;
+
+  &:hover {
+	background-color: $light-color;
+  }
+
+  &:last-child {
+	border-bottom: none;
+  }
+
+  strong {
+	display:       block;
+	font-size:     14px;
+	margin-bottom: 2px;
+  }
+
+  .wpas-post-type {
+	color:      $text-muted;
+	font-size:  12px;
+	font-style: italic;
+  }
+}
+
+.wpas-related-posts-list {
+  max-height:    250px;
+  overflow-y:    auto;
+  margin:        15px 0;
+  border:        1px solid $border-color;
+  border-radius: $radius;
+  background:    $white;
+
+  &::-webkit-scrollbar {
+	width: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+	background: $light-color;
+  }
+
+  &::-webkit-scrollbar-thumb {
+	background:    $border-color;
+	border-radius: 3px;
+
+	&:hover {
+	  background: darken($border-color, 10%);
+	}
+  }
+}
+
+.wpas-related-post-item {
+  @include flex-between;
+  align-items:   center;
+  padding:       10px 15px;
+  border-bottom: 1px solid $border-color;
+  transition:    $transition;
+
+  &:hover {
+	background: $light-color;
+  }
+
+  &:last-child {
+	border-bottom: none;
+  }
+}
+
+.wpas-related-post-content {
+  flex-grow: 1;
+  min-width: 0;
+
+  strong {
+	display:       block;
+	font-size:     14px;
+	color:         $text-color;
+	margin-bottom: 2px;
+	overflow:      hidden;
+	text-overflow: ellipsis;
+	white-space:   nowrap;
+  }
+}
+
+.wpas-post-type {
+  color:      $text-muted;
+  font-size:  12px;
+  font-style: italic;
+}
+
+.wpas-remove-related-post {
+  color:           $danger-color;
+  text-decoration: none;
+  background:      none;
+  border:          none;
+  cursor:          pointer;
+  padding:         5px;
+  margin-left:     10px;
+  transition:      $transition;
+
+  &:hover {
+	color:     darken($danger-color, 10%);
+	transform: scale(1.1);
+  }
+
+  .dashicons {
+	font-size: 16px;
+	width:     16px;
+	height:    16px;
+  }
+}
+
+// Add Related Post
+.wpas-add-related-post {
+  margin-top: 20px;
+}
+
+.wpas-add-related-post-btn {
+  width:       100%;
+  text-align:  center;
+  padding:     10px;
+  margin-top:  10px;
+  font-weight: 500;
+}
+
+// Roles List
+.wpas-roles-list {
+  max-height:    250px;
+  overflow-y:    auto;
+  padding:       15px;
+  border:        1px solid $border-color;
+  border-radius: $radius;
+  background:    $light-color;
+
+  &::-webkit-scrollbar {
+	width: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+	background: darken($light-color, 5%);
+  }
+}
+
+.wpas-role-item {
+  margin-bottom:  10px;
+  padding-bottom: 10px;
+  border-bottom:  1px solid $border-color;
+
+  &:last-child {
+	border-bottom:  none;
+	margin-bottom:  0;
+	padding-bottom: 0;
+  }
+
+  label {
+	display:     flex;
+	align-items: center;
+	cursor:      pointer;
+	font-size:   14px;
+	gap:         6px;
+	color:       $text-color;
+	transition:  $transition;
+
+	&:hover {
+	  color: $primary-color;
+	}
+  }
+
+  input[type="checkbox"] {
+	cursor: pointer;
+
+	&:checked {
+	  accent-color: $primary-color;
+	}
+  }
+}
+
+// Add Item Container
+.wpas-add-item-container {
+  text-align:  center;
+  margin-top:  25px;
+  padding-top: 25px;
+  border-top:  2px dashed $border-color;
+}
+
+.button.wpas-add-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size:   14px;
+  padding:     10px 25px;
+  font-weight: 500;
+  transition:  $transition;
+
+  svg {
+	width:  24px;
+	height: 24px;
+	transition:  $transition;
+  }
+
+  &:hover {
+	background-color: $primary-color;
+	border-color:     $primary-color;
+
+	svg {
+	  transform: rotate(180deg);
+	}
+  }
+}
+
+// Sortable Placeholder
+.ui-sortable-placeholder {
+  background:    $light-color;
+  border:        2px dashed $text-muted;
+  border-radius: $radius;
+  visibility:    visible !important;
+  height:        150px !important;
+  margin-bottom: 15px;
+  opacity:       0.7;
+}
+
+// Validation States
+.wpas-field-error {
+  border-color: $danger-color !important;
+
+  &:focus {
+	box-shadow: 0 0 0 3px rgba($danger-color, 0.1) !important;
+  }
+}
+
+.wpas-error-message {
+  color:      $danger-color;
+  font-size:  12px;
+  margin-top: 5px;
+  display:    none;
+
+  &.visible {
+	display: block;
+  }
+}
+
+.wpas-field-success {
+  border-color: $success-color !important;
+}
+
+// Loading States
+.wpas-loading {
+  position:       relative;
+  opacity:        0.7;
+  pointer-events: none;
+
+  &::after {
+	content:          '';
+	position:         absolute;
+	top:              50%;
+	left:             50%;
+	width:            20px;
+	height:           20px;
+	margin:           -10px 0 0 -10px;
+	border:           2px solid $border-color;
+	border-top-color: $primary-color;
+	border-radius:    50%;
+	animation:        wpas-spin 0.8s linear infinite;
+  }
+}
+
+@keyframes wpas-spin {
+  to {
+	transform: rotate(360deg);
+  }
+}
+
+// Tooltips
+.wpas-tooltip {
+  position: relative;
+
+  &::before {
+	content:        attr(data-tooltip);
+	position:       absolute;
+	bottom:         100%;
+	left:           50%;
+	transform:      translateX(-50%);
+	padding:        6px 10px;
+	background:     $dark-color;
+	color:          $white;
+	font-size:      12px;
+	border-radius:  4px;
+	white-space:    nowrap;
+	opacity:        0;
+	visibility:     hidden;
+	transition:     $transition;
+	z-index:        1000;
+	pointer-events: none;
+  }
+
+  &::after {
+	content:          '';
+	position:         absolute;
+	bottom:           100%;
+	left:             50%;
+	transform:        translateX(-50%);
+	border:           4px solid transparent;
+	border-top-color: $dark-color;
+	opacity:          0;
+	visibility:       hidden;
+	transition:       $transition;
+	z-index:          1000;
+  }
+
+  &:hover {
+	&::before,
+	&::after {
+	  opacity:    1;
+	  visibility: visible;
+	  bottom:     calc(100% + 8px);
+	}
+  }
+}
+
+// Responsive Design
+@media screen and (max-width: 782px) {
+  .wpas-story-item {
+	padding: 12px;
+  }
+
+  .wpas-item-controls,
+  .wpas-item-actions {
+	width: 100%;
+  }
+
+  .wpas-media-preview {
+	min-height: 200px;
+  }
+
+  .wpas-type-duration-row {
+	flex-direction: column;
+  }
+
+  .wpas-duration-input {
+	width: 100%;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .wpas-metabox-container {
+	padding: 10px 0;
+  }
+
+  .wpas-field-group {
+	margin-bottom: 15px;
+  }
+
+  .wpas-story-item {
+	margin-bottom: 10px;
+  }
+
+  .wpas-media-selector {
+	padding: 15px;
+  }
+}
+
+// Dark Mode Support
+@media (prefers-color-scheme: dark) {
+  .wpas-metabox-container {
+	// Add dark mode styles here if needed
+  }
+}
+
+// Print Styles
+@media print {
+  .wpas-add-item-container,
+  .wpas-add-related-post,
+  .wpas-item-actions {
+	display: none !important;
+  }
+}
