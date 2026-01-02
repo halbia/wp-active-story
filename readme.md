@@ -1,4 +1,4 @@
-﻿=== WP Active Story ===
+=== WP Active Story ===
 Contributors: yourname
 Tags: story, instagram story, social media, content
 Requires at least: 5.6
@@ -7,31 +7,31 @@ Stable tag: 1.0.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-افزونه استوری اختصاصی برای وردپرس
+A dedicated story plugin for WordPress.
 
 == Description ==
 
-افزونه WP Active Story امکان ایجاد استوری‌های اختصاصی در سایت وردپرسی را فراهم می‌کند.
+The WP Active Story plugin enables the creation of dedicated stories on your WordPress site.
 
 == Features ==
-* پشتیبانی از تصاویر و ویدیو در استوری
-* قابلیت لایک کردن استوری
-* سیستم کامنت برای استوری
-* اتصال استوری به پست‌ها و محصولات
-* کنترل نوار زمان و پخش خودکار
-* پشتیبانی از تاچ و کیبورد
-* سازگار با المنتور
+* Support for images and videos in stories
+* Story liking capability
+* Comment system for stories
+* Connecting stories to posts and products
+* Timeline bar control and auto-play
+* Touch and keyboard support
+* Compatible with Elementor
 
 == Installation ==
 
-1. آپلود پوشه `wp-active-story` به پوشه `/wp-content/plugins/`
-2. فعال‌سازی افزونه از طریق منوی 'افزونه‌ها' در وردپرس
-3. استفاده از شرت‌کد `[wp_active_story]` یا ویجت المنتور
+1. Upload the `wp-active-story` folder to the `/wp-content/plugins/` directory.
+2. Activate the plugin through the 'Plugins' menu in WordPress.
+3. Use the shortcode `[wp_active_story]` or the Elementor widget.
 
 == Changelog ==
 
 = 1.0.0 =
-* اولین نسخه
+* Initial release
 
 == License ==
 
