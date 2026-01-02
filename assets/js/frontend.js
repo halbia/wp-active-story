@@ -1,217 +1,181 @@
-﻿/**
- * Frontend JavaScript for WP Active Story
- */
+﻿(function($) {
+    'use strict';
 
-document.addEventListener('DOMContentLoaded', function() {
-    // Initialize stories
-    const storyContainers = document.querySelectorAll('.wpas-story-container');
-    
-    storyContainers.forEach(container => {
-        initStory(container);
-    });
-});
+    var WPAS = {
+        init: function() {
+            this.currentStory = null;
+            this.currentIndex = 0;
+            this.progressInterval = null;
+            this.bindEvents();
+        },
 
-function initStory(container) {
-    const items = container.querySelectorAll('.wpas-story-item');
-    const progressBars = container.querySelectorAll('.wpas-progress-fill');
-    const prevBtn = container.querySelector('.wpas-control-btn.prev');
-    const nextBtn = container.querySelector('.wpas-control-btn.next');
-    const pauseBtn = container.querySelector('.wpas-control-btn.pause');
-    const closeBtn = container.querySelector('.wpas-story-close');
-    const likeBtn = container.querySelector('.wpas-like-btn');
-    const prevArea = container.querySelector('.wpas-prev-area');
-    const nextArea = container.querySelector('.wpas-next-area');
-    
-    let currentIndex = 0;
-    let isPaused = false;
-    let progressInterval;
-    let touchStartX = 0;
-    let touchEndX = 0;
-    
-    // Show first item
-    showItem(currentIndex);
-    
-    // Start progress
-    startProgress();
-    
-    // Event Listeners
-    if (prevBtn) prevBtn.addEventListener('click', prevStory);
-    if (nextBtn) nextBtn.addEventListener('click', nextStory);
-    if (pauseBtn) pauseBtn.addEventListener('click', togglePause);
-    if (closeBtn) closeBtn.addEventListener('click', closeStory);
-    if (likeBtn) likeBtn.addEventListener('click', toggleLike);
-    
-    // Touch events
-    if (prevArea) {
-        prevArea.addEventListener('touchstart', handleTouchStart);
-        prevArea.addEventListener('touchend', handleTouchEnd);
-        prevArea.addEventListener('click', prevStory);
-    }
-    
-    if (nextArea) {
-        nextArea.addEventListener('touchstart', handleTouchStart);
-        nextArea.addEventListener('touchend', handleTouchEnd);
-        nextArea.addEventListener('click', nextStory);
-    }
-    
-    // Keyboard events
-    document.addEventListener('keydown', handleKeydown);
-    
-    // Functions
-    function showItem(index) {
-        // Hide all items
-        items.forEach(item => {
-            item.classList.remove('active');
-        });
-        
-        // Show current item
-        if (items[index]) {
-            items[index].classList.add('active');
-        }
-        
-        // Reset progress bars
-        progressBars.forEach((bar, i) => {
-            bar.style.width = i < index ? '100%' : '0%';
-        });
-        
-        currentIndex = index;
-    }
-    
-    function startProgress() {
-        if (isPaused) return;
-        
-        const currentProgressBar = progressBars[currentIndex];
-        if (!currentProgressBar) return;
-        
-        let width = 0;
-        const duration = parseInt(currentProgressBar.dataset.duration) || 5000; // 5 seconds default
-        const interval = 50; // Update every 50ms
-        const increment = (100 / (duration / interval));
-        
-        clearInterval(progressInterval);
-        
-        progressInterval = setInterval(() => {
-            if (width >= 100) {
-                clearInterval(progressInterval);
-                nextStory();
+        bindEvents: function() {
+            // Open story when circle is clicked
+            $(document).on('click', '.wpas-story-circle', function() {
+                var $this = $(this);
+                WPAS.openStory($this);
+            });
+
+            // Close popup
+            $(document).on('click', '.wpas-popup-close, .wpas-popup-overlay', function() {
+                WPAS.closePopup();
+            });
+
+            // Navigation
+            $(document).on('click', '.wpas-popup-prev', function() {
+                WPAS.prevItem();
+            });
+
+            $(document).on('click', '.wpas-popup-next', function() {
+                WPAS.nextItem();
+            });
+
+            // Keyboard navigation
+            $(document).on('keydown', function(e) {
+                if ($('#wpas-story-popup').is(':visible')) {
+                    if (e.key === 'Escape') {
+                        WPAS.closePopup();
+                    } else if (e.key === 'ArrowLeft') {
+                        WPAS.prevItem();
+                    } else if (e.key === 'ArrowRight') {
+                        WPAS.nextItem();
+                    }
+                }
+            });
+        },
+
+        openStory: function($circle) {
+            var items = $circle.data('items');
+            var author = $circle.data('author');
+            var avatar = $circle.data('avatar');
+
+            if (!items || items.length === 0) return;
+
+            this.currentStory = items;
+            this.currentIndex = 0;
+
+            // Set user info
+            $('.wpas-popup-username').text(author);
+            $('.wpas-popup-avatar').attr('src', avatar);
+
+            // Setup progress bars
+            this.setupProgressBars(items.length);
+
+            // Load first item
+            this.loadItem(this.currentIndex);
+
+            // Show popup
+            $('#wpas-story-popup').fadeIn();
+            $('body').css('overflow', 'hidden');
+
+            // Start progress
+            this.startProgress();
+        },
+
+        setupProgressBars: function(count) {
+            var $container = $('.wpas-popup-progress');
+            $container.empty();
+
+            for (var i = 0; i < count; i++) {
+                $container.append(
+                    '<div class="wpas-popup-progress-bar">' +
+                    '<div class="wpas-progress-fill"></div>' +
+                    '</div>'
+                );
+            }
+        },
+
+        loadItem: function(index) {
+            if (!this.currentStory || index < 0 || index >= this.currentStory.length) {
                 return;
             }
-            
-            if (!isPaused) {
-                width += increment;
-                currentProgressBar.style.width = width + '%';
+
+            this.currentIndex = index;
+            var item = this.currentStory[index];
+            var $mediaContainer = $('.wpas-popup-media');
+
+            // Clear previous media
+            $mediaContainer.empty();
+
+            // Load new media
+            if (item.type === 'image') {
+                $mediaContainer.html('<img src="' + item.media_url + '" alt="' + item.title + '">');
+            } else if (item.type === 'video') {
+                $mediaContainer.html(
+                    '<video autoplay controls>' +
+                    '<source src="' + item.media_url + '" type="video/mp4">' +
+                    '</video>'
+                );
             }
-        }, interval);
-    }
-    
-    function nextStory() {
-        if (currentIndex < items.length - 1) {
-            showItem(currentIndex + 1);
-            startProgress();
-        } else {
-            // Last story - close or loop
-            closeStory();
-        }
-    }
-    
-    function prevStory() {
-        if (currentIndex > 0) {
-            showItem(currentIndex - 1);
-            startProgress();
-        }
-    }
-    
-    function togglePause() {
-        isPaused = !isPaused;
-        const pauseIcon = pauseBtn.querySelector('i');
-        
-        if (pauseIcon) {
-            pauseIcon.className = isPaused ? 'fas fa-play' : 'fas fa-pause';
-        }
-        
-        if (!isPaused) {
-            startProgress();
-        }
-    }
-    
-    function closeStory() {
-        container.style.display = 'none';
-        document.removeEventListener('keydown', handleKeydown);
-    }
-    
-    function toggleLike() {
-        const storyId = likeBtn.dataset.storyId;
-        likeBtn.classList.toggle('liked');
-        
-        // AJAX call to save like
-        fetch(wpas_ajax.ajax_url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            body: new URLSearchParams({
-                action: 'wpas_like_story',
-                story_id: storyId,
-                nonce: wpas_ajax.nonce
-            })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                const likeCount = likeBtn.querySelector('.like-count');
-                if (likeCount) {
-                    likeCount.textContent = data.likes_count;
+
+            // Update progress bars
+            this.updateProgressBars(index);
+        },
+
+        startProgress: function() {
+            this.stopProgress();
+
+            if (!this.currentStory || this.currentIndex >= this.currentStory.length) return;
+
+            var item = this.currentStory[this.currentIndex];
+            var duration = (item.duration || 5) * 1000;
+            var $progressBar = $('.wpas-progress-fill').eq(this.currentIndex);
+            var startTime = Date.now();
+
+            this.progressInterval = setInterval(function() {
+                var elapsed = Date.now() - startTime;
+                var progress = (elapsed / duration) * 100;
+
+                if (progress <= 100) {
+                    $progressBar.css('width', progress + '%');
+                } else {
+                    WPAS.nextItem();
                 }
+            }, 50);
+        },
+
+        stopProgress: function() {
+            if (this.progressInterval) {
+                clearInterval(this.progressInterval);
+                this.progressInterval = null;
             }
-        });
-    }
-    
-    function handleTouchStart(e) {
-        touchStartX = e.changedTouches[0].screenX;
-        isPaused = true;
-    }
-    
-    function handleTouchEnd(e) {
-        touchEndX = e.changedTouches[0].screenX;
-        handleSwipe();
-        isPaused = false;
-        startProgress();
-    }
-    
-    function handleSwipe() {
-        const swipeThreshold = 50;
-        const diff = touchStartX - touchEndX;
-        
-        if (Math.abs(diff) > swipeThreshold) {
-            if (diff > 0) {
-                // Swipe left - next
-                nextStory();
+        },
+
+        updateProgressBars: function(index) {
+            $('.wpas-progress-fill').each(function(i) {
+                $(this).css('width', i < index ? '100%' : i === index ? '0%' : '0%');
+            });
+        },
+
+        nextItem: function() {
+            if (this.currentIndex < this.currentStory.length - 1) {
+                this.currentIndex++;
+                this.loadItem(this.currentIndex);
+                this.startProgress();
             } else {
-                // Swipe right - previous
-                prevStory();
+                this.closePopup();
             }
+        },
+
+        prevItem: function() {
+            if (this.currentIndex > 0) {
+                this.currentIndex--;
+                this.loadItem(this.currentIndex);
+                this.startProgress();
+            }
+        },
+
+        closePopup: function() {
+            this.stopProgress();
+            $('#wpas-story-popup').fadeOut();
+            $('body').css('overflow', '');
+            this.currentStory = null;
+            this.currentIndex = 0;
         }
-    }
-    
-    function handleKeydown(e) {
-        switch(e.key) {
-            case 'ArrowLeft':
-                prevStory();
-                break;
-            case 'ArrowRight':
-                nextStory();
-                break;
-            case ' ':
-                e.preventDefault();
-                togglePause();
-                break;
-            case 'Escape':
-                closeStory();
-                break;
-            case 'l':
-            case 'L':
-                toggleLike();
-                break;
-        }
-    }
-}
+    };
+
+    $(document).ready(function() {
+        WPAS.init();
+    });
+
+})(jQuery);

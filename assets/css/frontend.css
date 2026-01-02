@@ -1,181 +1,196 @@
-/* CSS Frontend - WP Active Story */
-:root {
-  --wpas-primary-color: #0095f6;
-  --wpas-secondary-color: #8e8e8e;
-  --wpas-bg-color: #000;
-  --wpas-text-color: #fff;
-  --wpas-progress-height: 3px;
-  --wpas-story-width: 360px;
-  --wpas-story-height: 640px;
+/* WP Active Story - Frontend Styles */
+.wpas-stories-container {
+  width: 100%;
+  overflow-x: auto;
+  padding: 10px 0;
+  margin: 20px 0;
 }
 
-.wpas-story-container {
+.wpas-stories-slider {
+  display: flex;
+  gap: 15px;
+  padding: 0 10px;
+}
+
+.wpas-story-circle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  overflow: hidden;
+  cursor: pointer;
+  border: 3px solid #667eea;
   position: relative;
-  width: var(--wpas-story-width);
-  height: var(--wpas-story-height);
-  margin: 0 auto;
-  background: var(--wpas-bg-color);
+  transition: transform 0.3s ease;
+}
+
+.wpas-story-circle:hover {
+  transform: scale(1.05);
+}
+
+.wpas-story-circle img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Story Popup */
+.wpas-story-popup {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 999999;
+}
+
+.wpas-popup-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.9);
+}
+
+.wpas-popup-content {
+  position: relative;
+  max-width: 400px;
+  height: 80%;
+  margin: 50px auto;
+  background: #000;
   border-radius: 10px;
   overflow: hidden;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
 }
 
-.wpas-story-header {
+.wpas-popup-header {
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
-  z-index: 10;
-  padding: 10px;
-  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.5), transparent);
-}
-
-.wpas-progress-container {
   display: flex;
-  gap: 5px;
-  margin-bottom: 10px;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.5), transparent);
+  z-index: 10;
 }
 
-.wpas-progress-bar {
-  flex: 1;
-  height: var(--wpas-progress-height);
-  background: rgba(255, 255, 255, 0.3);
-  border-radius: 2px;
-  overflow: hidden;
+.wpas-popup-user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: white;
 }
 
-.wpas-progress-fill {
-  height: 100%;
-  background: var(--wpas-text-color);
-  width: 0%;
-  transition: width 0.1s linear;
-}
-
-.wpas-story-close {
-  position: absolute;
-  top: 15px;
-  right: 15px;
-  color: var(--wpas-text-color);
-  background: rgba(0, 0, 0, 0.5);
-  border: none;
+.wpas-popup-avatar {
   width: 30px;
   height: 30px;
+  border-radius: 50%;
+  border: 2px solid white;
+}
+
+.wpas-popup-close {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 30px;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0;
+  width: 30px;
+  height: 30px;
+}
+
+.wpas-popup-media {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.wpas-popup-media img,
+.wpas-popup-media video {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.wpas-popup-navigation {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  transform: translateY(-50%);
+  display: flex;
+  justify-content: space-between;
+  padding: 0 10px;
+  z-index: 10;
+}
+
+.wpas-popup-prev,
+.wpas-popup-next {
+  background: rgba(255, 255, 255, 0.3);
+  border: none;
+  color: white;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   cursor: pointer;
   font-size: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 100;
+  transition: background 0.3s;
 }
 
-.wpas-story-content {
-  position: relative;
-  width: 100%;
-  height: 100%;
+.wpas-popup-prev:hover,
+.wpas-popup-next:hover {
+  background: rgba(255, 255, 255, 0.5);
 }
 
-.wpas-story-item {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  opacity: 0;
-  transition: opacity 0.5s ease;
-}
-
-.wpas-story-item.active {
-  opacity: 1;
-}
-
-.wpas-story-item img,
-.wpas-story-item video {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.wpas-story-caption {
-  position: absolute;
-  bottom: 80px;
-  left: 0;
-  right: 0;
-  padding: 20px;
-  color: var(--wpas-text-color);
-  text-align: center;
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
-}
-
-.wpas-story-controls {
+.wpas-popup-progress {
   position: absolute;
   bottom: 0;
   left: 0;
   right: 0;
-  padding: 20px;
   display: flex;
-  justify-content: center;
-  gap: 15px;
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+  gap: 2px;
+  padding: 10px;
 }
 
-.wpas-control-btn {
-  background: rgba(255, 255, 255, 0.2);
-  border: none;
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  color: var(--wpas-text-color);
-  font-size: 24px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background 0.3s ease;
-}
-
-.wpas-control-btn:hover {
+.wpas-popup-progress-bar {
+  flex: 1;
+  height: 3px;
   background: rgba(255, 255, 255, 0.3);
+  border-radius: 2px;
+  overflow: hidden;
 }
 
-.wpas-like-btn {
-  background: transparent;
-  border: none;
-  color: var(--wpas-text-color);
-  font-size: 24px;
-  cursor: pointer;
-  position: absolute;
-  right: 20px;
-  bottom: 20px;
+.wpas-progress-fill {
+  width: 0%;
+  height: 100%;
+  background: white;
+  transition: width linear;
 }
 
-.wpas-like-btn.liked {
-  color: #ed4956;
+/* Scrollbar styling */
+.wpas-stories-container::-webkit-scrollbar {
+  height: 6px;
 }
 
-.wpas-navigation-area {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 50%;
-  z-index: 5;
+.wpas-stories-container::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
 }
 
-.wpas-prev-area {
-  left: 0;
-}
-
-.wpas-next-area {
-  right: 0;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-  .wpas-story-container {
-    width: 100vw;
-    height: 100vh;
-    border-radius: 0;
-  }
+.wpas-stories-container::-webkit-scrollbar-thumb {
+  background: #667eea;
+  border-radius: 3px;
 }
 
 /*# sourceMappingURL=frontend.css.map */

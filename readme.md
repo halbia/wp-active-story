@@ -1,8 +1,9 @@
 === WP Active Story ===
+
 Contributors: yourname
 Tags: story, instagram story, social media, content
-Requires at least: 5.6
-Tested up to: 6.3
+Requires at least: 6.7
+Tested up to: 6.9
 Stable tag: 1.0.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html

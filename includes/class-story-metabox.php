@@ -432,15 +432,19 @@ class Wp_Active_Story_Metabox{
             <p class="description">
                 <?php _e('Select user roles that can view this story', 'wp-active-story'); ?>
             </p>
+            <p class="description">
+                <?php _e('Administrator always can view this story', 'wp-active-story'); ?>
+            </p>
 
             <div class="wpas-roles-list">
                 <?php foreach ($wp_roles as $role_id => $role_info):
+                    if ($role_id === 'administrator') continue;
+
                     $checked = in_array($role_id, $allowed_roles) ? 'checked' : '';
                     ?>
                     <div class="wpas-role-item">
                         <label>
-                            <input type="checkbox"
-                                   name="wpas_allowed_roles[]"
+                            <input type="checkbox" name="wpas_allowed_roles[]"
                                    value="<?php echo esc_attr($role_id); ?>"
                                 <?php echo $checked; ?>>
                             <?php echo esc_html($role_info['name']); ?>
@@ -448,15 +452,10 @@ class Wp_Active_Story_Metabox{
                     </div>
                 <?php endforeach; ?>
 
-                <!-- Always include administrator -->
-                <input type="hidden" name="wpas_allowed_roles[]" value="administrator">
-
                 <!-- Visitors checkbox -->
                 <div class="wpas-role-item">
                     <label>
-                        <input type="checkbox"
-                               name="wpas_allowed_visitors"
-                               value="1"
+                        <input type="checkbox" name="wpas_allowed_visitors" value="1"
                             <?php checked(get_post_meta($post->ID, '_story_allow_visitors', true), '1'); ?>>
                         <?php _e('Allow Visitors (non-logged in users)', 'wp-active-story'); ?>
                     </label>
@@ -541,20 +540,11 @@ class Wp_Active_Story_Metabox{
 
 
         // Save Allowed Roles
+        $allowed_roles = array();
         if (isset($_POST['wpas_allowed_roles']) && is_array($_POST['wpas_allowed_roles'])) {
             $allowed_roles = array_map('sanitize_text_field', $_POST['wpas_allowed_roles']);
-
-            // Always include administrator
-            if (!in_array('administrator', $allowed_roles)) {
-                $allowed_roles[] = 'administrator';
-            }
-
-            update_post_meta($post_id, '_story_allowed_roles', $allowed_roles);
-        } else {
-            // Default to all roles
-            $all_roles = array_keys(wp_roles()->roles);
-            update_post_meta($post_id, '_story_allowed_roles', $all_roles);
         }
+        update_post_meta($post_id, '_story_allowed_roles', $allowed_roles);
 
 
         // Save Visitors Access

@@ -133,21 +133,8 @@ jQuery(document).ready(function($) {
                 }
             }
         });
-
-        // Title sync (در صورت نیاز به نمایش جایگزین)
-        $item.find('.wpas-item-title-input').on('input', function() {
-            var title = $(this).val();
-            // اگر نیاز به نمایش عنوان در جای دیگری دارید، اینجا اضافه کنید
-        });
-
-        // Duration display (ثانیه)
-        $item.find('.wpas-duration-input').on('input', function() {
-            var seconds = $(this).val();
-            var $display = $(this).closest('.wpas-field-group').find('.wpas-duration-display');
-            var milliseconds = seconds * 1000;
-            $display.text('(' + milliseconds.toLocaleString() + ' milliseconds)');
-        });
     }
+
 
     // Duplicate item
     function duplicateItem($originalItem) {
@@ -407,9 +394,6 @@ jQuery(document).ready(function($) {
 
     function removeRelatedPost() {
         var $item = $(this).closest('.wpas-related-post-item');
-        var postId = $item.data('post-id');
-        var postTitle = $item.find('strong').text();
-        var postType = $item.find('.wpas-post-type').text().replace(/[()]/g, '').trim();
 
         // Remove from list
         $item.remove();
