@@ -834,3 +834,18 @@ $transition:    all 0.3s ease;
 	display: none !important;
   }
 }
+
+
+.column-thumbnail {
+  width: 80px;
+}
+.wpas-no-thumbnail {
+  width:           60px;
+  height:          60px;
+  background:      #f0f0f0;
+  display:         flex;
+  align-items:     center;
+  justify-content: center;
+  color:           #999;
+  font-size:       10px;
+}

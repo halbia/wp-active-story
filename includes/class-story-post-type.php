@@ -132,12 +132,18 @@ class Wp_Active_Story_Post_Type{
         register_taxonomy('story_category', array(WPAS_POST_TYPE), $category_args);
     }
 
+
+
     /**
      * Add custom columns to admin list
      */
     public function add_custom_columns($columns)
     {
         $new_columns = array();
+
+        // Add thumbnail column at the beginning
+        $new_columns['cb'] = $columns['cb'];
+        $new_columns['thumbnail'] = __('Thumbnail', 'wp-active-story');
 
         foreach ($columns as $key => $value) {
             $new_columns[$key] = $value;
@@ -163,6 +169,15 @@ class Wp_Active_Story_Post_Type{
     public function render_custom_columns($column, $post_id)
     {
         switch ($column) {
+            case 'thumbnail':
+                $thumbnail = get_the_post_thumbnail($post_id, array(50, 50));
+                if ($thumbnail) {
+                    echo '<div class="wpas-thumbnail">' . $thumbnail . '</div>';
+                } else {
+                    echo '<div class="wpas-no-thumbnail" style="width: 50px; height: 50px; background: #f0f0f0; display: flex; align-items: center; justify-content: center; color: #999; font-size: 10px;">' . __('No Image', 'wp-active-story') . '</div>';
+                }
+                break;
+
             case 'story_items':
                 $items = get_post_meta($post_id, '_story_items', true);
                 $count = is_array($items) ? count($items) : 0;
@@ -308,7 +323,6 @@ class Wp_Active_Story_Post_Type{
         $custom_text .= __('Index image size: 300 × 300 pixels','wp-active-story');
         $custom_text .= '</p>';
 
-        // فقط برای پست‌های خاص نمایش دهید (اختیاری)
         $post_type = get_post_type($post_id);
         if ($post_type === WPAS_POST_TYPE) {
             $content .= $custom_text;

@@ -17,11 +17,13 @@ if (!defined('ABSPATH')) {
 // تعریف ثابت‌های افزونه
 define('WPAS_VERSION', '1.0.0');
 define('WPAS_PLUGIN_DIR', plugin_dir_path(__FILE__));
+define('WPAS_PLUGIN_IMAGE_PATH', plugin_dir_path(__FILE__) . 'assets/images/');
 define('WPAS_PLUGIN_URL', plugin_dir_url(__FILE__));
 define('WPAS_PLUGIN_INC_DIR', plugin_dir_path(__FILE__) . 'includes/');
 define('WPAS_POST_TYPE', 'wp_active_story');
 
 // بارگذاری فایل‌های اصلی
+require_once WPAS_PLUGIN_INC_DIR . 'helper-functions.php';
 require_once WPAS_PLUGIN_INC_DIR . 'class-wp-active-story.php';
 require_once WPAS_PLUGIN_INC_DIR . 'class-story-post-type.php';
 require_once WPAS_PLUGIN_INC_DIR . 'class-story-metabox.php';
