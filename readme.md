@@ -36,3 +36,5 @@ The WP Active Story plugin enables the creation of dedicated stories on your Wor
 == License ==
 
 GPL v2 or later
+
+** Still in development **
